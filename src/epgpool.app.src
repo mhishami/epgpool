@@ -1,0 +1,35 @@
+%% -author('Hisham Ismail <mhishami@gmail.com').
+
+{application, epgpool,
+ [
+  {description, "A simple PostgreSQL Pool Worker"},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { epgpool_app, []}},
+  {env, [
+    {pools, [
+      {write, [
+        {size, 5},
+        {max_overflow, 20}
+      ], [
+        {hostname, "localhost"},
+        {database, "test"},
+        {username, "hisham"},
+        {password, "sa"}
+      ]},
+      {read, [
+        {size, 10},
+        {max_overflow, 20}
+      ], [
+        {hostname, "localhost"},
+        {database, "test"},
+        {username, "hisham"},
+        {password, "sa"}
+      ]}
+    ]}
+  ]}
+ ]}.
