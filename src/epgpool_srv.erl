@@ -4,6 +4,8 @@
 -behaviour(gen_server).
 -define(SERVER, ?MODULE).
 
+-include ("epgpool.hrl").
+
 %% ------------------------------------------------------------------
 %% API Function Exports
 %% ------------------------------------------------------------------
@@ -40,9 +42,7 @@ start_link(Args) ->
 init(Args) ->
     process_flag(trap_exit, true),
     
-    io:format("%% ------------------------------------------------------------------~n"),
-    io:format("%% Args: ~p~n", [Args]),
-    io:format("%% ------------------------------------------------------------------~n"),
+    ?INFO("Args: ~p~n", [Args]),
     
     Hostname = proplists:get_value(hostname, Args),
     Database = proplists:get_value(database, Args),
@@ -55,15 +55,11 @@ init(Args) ->
     {ok, #state{conn=Conn}}.
 
 handle_call({squery, Stmt}, _From, #state{conn=Conn} = State) ->
-    io:format("%% ------------------------------------------------------------------~n"),
-    io:format("%% SQUERY: ~p~n", [Stmt]),
-    io:format("%% ------------------------------------------------------------------~n"),
+    ?INFO("%% SQUERY: ~p~n", [Stmt]),
     {reply, pgsql:squery(Conn, Stmt), State};
 
 handle_call({equery, Stmt, Params}, _From, #state{conn=Conn} = State) ->
-    io:format("%% ------------------------------------------------------------------~n"),
-    io:format("%% EQUERY: ~p, [~p]~n", [Stmt, Params]),
-    io:format("%% ------------------------------------------------------------------~n"),
+    ?INFO("%% EQUERY: ~p,~n%% [~p]~n", [Stmt, Params]),
     {reply, pgsql:equery(Conn, Stmt, Params), State};
 
 handle_call(_Request, _From, State) ->
